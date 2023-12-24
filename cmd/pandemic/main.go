@@ -21,10 +21,18 @@ func main() {
 		loggerOptions = append(loggerOptions, logger.WithLogLevel(zapcore.DebugLevel))
 	}
 
-	/*appLogger*/
-	_, syncLogger, err := logger.NewLogger(loggerOptions...)
+	appLogger, syncLogger, err := logger.NewLogger(loggerOptions...)
 	if err != nil {
 		log.Fatal(fmt.Errorf("failed to init logger: %w", err))
 	}
 	defer syncLogger()
+
+	app := pandemic.NewApplication(&cfg, appLogger)
+	if err := app.Init(); err != nil {
+		appLogger.Fatalw("failed init application", "err", err)
+	}
+
+	if err := app.Run(); err != nil {
+		appLogger.Fatalw("failed run application", "err", err)
+	}
 }
