@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -32,7 +33,7 @@ func main() {
 		appLogger.Fatalw("failed init application", "err", err)
 	}
 
-	if err := app.Run(); err != nil {
+	if err := app.Run(context.Background()); err != nil {
 		appLogger.Fatalw("failed run application", "err", err)
 	}
 }

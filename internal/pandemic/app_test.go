@@ -1,6 +1,7 @@
 package pandemic_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/gna69/pandemic/internal/pandemic"
@@ -36,13 +37,15 @@ func (s *ApplicationSuite) TestSuccessInitApplication() {
 
 func (s *ApplicationSuite) TestSuccessRunApplication() {
 	// arrange
+	ctx, cancel := context.WithCancel(context.Background())
 	config := pandemic.Config{}
 	app := pandemic.NewApplication(&config, s.logger)
 	err := app.Init()
 	s.Require().NoError(err)
 
 	// act
-	err = app.Run()
+	cancel()
+	err = app.Run(ctx)
 
 	// assert
 	s.NoError(err)
